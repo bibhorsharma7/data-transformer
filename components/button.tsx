@@ -1,9 +1,33 @@
-"use client";
+import { useState } from "react";
 
-const Button = () => {
+const Button = ({ file }: { file: File | null }) => {
+  const [data, setData] = useState<JSON | null>(null);
+
+  const handleSubmit = async () => {
+    const formData = new FormData();
+    if (!file) {
+      return;
+    }
+
+    console.log("file name:", file.name);
+
+    formData.append("file", file);
+    console.log("formData:", formData);
+
+    // const response = await fetch("/api/uplaod", {
+    //   method: "POST",
+    //   body: formData,
+    // });
+
+    // const data = await response.json();
+    // setData(data.data);
+
+    alert("Submit Clicked");
+  };
+
   return (
     <div
-      onClick={() => alert("Submit Clicked")}
+      onClick={() => handleSubmit()}
       className="oerflow-hidden group relative inline-block h-12 w-full space-x-4 rounded bg-green-400 py-2 text-gray-700 hover:cursor-pointer"
     >
       <span className="absolute left-0 top-0 mr-0 flex h-full w-0 translate-y-0 transform rounded bg-green-500 opacity-90 transition-all duration-200 ease-out group-hover:w-full"></span>
