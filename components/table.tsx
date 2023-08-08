@@ -2,6 +2,7 @@ import { defaultNitems } from "@/app/constants";
 import Papa, { ParseResult } from "papaparse";
 import { useEffect, useRef, useState } from "react";
 import TableNav, { navArgument } from "./tableNav";
+import Loading from "./loading";
 
 interface tableProps {
   file: File | null;
@@ -18,10 +19,10 @@ const Table = (props: tableProps) => {
   useEffect(() => {
     setData([]);
     setStart(1);
-    setLoading(true);
 
     if (!file) return;
 
+    setLoading(true);
     Papa.parse(file, {
       worker: true,
       skipEmptyLines: true,
@@ -61,43 +62,46 @@ const Table = (props: tableProps) => {
   };
 
   return (
-    data.length > 0 && (
-      <div
-        ref={tableRef}
-        className="border-1 w-full rounded border-gray-700 shadow-md"
-      >
-        <TableNav
-          start={start}
-          nitems={nitems}
-          total={data.length}
-          handleNav={handleNav}
-        />
-        <table className="h-full w-full table-auto">
-          <thead className="h-10 bg-gray-50 text-left text-xs">
-            <tr>
-              {data[0].map((colName) => (
-                <th key={colName}>{colName}</th>
-              ))}
-            </tr>
-          </thead>
-          <tbody className="max-h-screen overflow-y-scroll text-xs ">
-            {data.slice(start, start + nitems).map((row) => (
-              <tr className="h-10 border-b" key={row[0]}>
-                {row.map((cell, idx) => (
-                  <td key={idx}>{cell}</td>
+    <>
+      {loading && <Loading />}
+      {data.length > 0 && (
+        <div
+          ref={tableRef}
+          className="border-1 w-full rounded border-gray-700 shadow-md"
+        >
+          <TableNav
+            start={start}
+            nitems={nitems}
+            total={data.length}
+            handleNav={handleNav}
+          />
+          <table className="h-full w-full table-auto">
+            <thead className="h-10 bg-gray-50 text-left text-xs">
+              <tr>
+                {data[0].map((colName) => (
+                  <th key={colName}>{colName}</th>
                 ))}
               </tr>
-            ))}
-          </tbody>
-        </table>
-        <TableNav
-          start={start}
-          nitems={nitems}
-          total={data.length}
-          handleNav={handleNav}
-        />
-      </div>
-    )
+            </thead>
+            <tbody className="max-h-screen overflow-y-scroll text-xs ">
+              {data.slice(start, start + nitems).map((row) => (
+                <tr className="h-10 border-b" key={row[0]}>
+                  {row.map((cell, idx) => (
+                    <td key={idx}>{cell}</td>
+                  ))}
+                </tr>
+              ))}
+            </tbody>
+          </table>
+          <TableNav
+            start={start}
+            nitems={nitems}
+            total={data.length}
+            handleNav={handleNav}
+          />
+        </div>
+      )}
+    </>
   );
 };
 
