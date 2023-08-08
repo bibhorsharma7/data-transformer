@@ -1,23 +1,39 @@
-import { columns } from "@/app/constants";
+import { defaultNitems } from "@/app/constants";
 import Papa, { ParseResult } from "papaparse";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
+import TableNav, { navArgument } from "./tableNav";
 
-const Table = ({ file }: { file: File | null }) => {
+interface tableProps {
+  file: File | null;
+}
+
+const Table = (props: tableProps) => {
+  const file = props.file;
+  const [loading, setLoading] = useState(false);
   const [data, setData] = useState<string[][]>([]);
-  const [nitems, setNitems] = useState(15);
+  const [nitems, setNitems] = useState(defaultNitems);
   const [start, setStart] = useState(1);
+  const tableRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
     setData([]);
+    setStart(1);
+    setLoading(true);
+
     if (!file) return;
 
     Papa.parse(file, {
-      chunk: (result: ParseResult<string[]>) => {
-        if (result.data) {
-          setData([...data, ...result.data]);
-        }
-      },
-      complete: () => {
+      worker: true,
+      skipEmptyLines: true,
+      // chunk: (result: ParseResult<string[]>) => {
+      //   if (result.data) {
+      //     const ndata = data.concat(result.data);
+      //     setData(ndata);
+      //   }
+      // },
+      complete: (result: ParseResult<string[]>) => {
+        setData(result.data);
+        setLoading(false);
         console.log("Parsing complete");
       },
     });
@@ -28,19 +44,34 @@ const Table = ({ file }: { file: File | null }) => {
     console.log("data count: ", data.length);
   }, [data]);
 
-  const handlePrev = () => {
-    const nstart = Math.max(1, start - nitems);
+  const handleNav = (type: navArgument) => {
+    let nstart = 1;
+    switch (type) {
+      case "prev":
+        nstart = Math.max(1, start - nitems);
+        break;
+      case "next":
+        nstart = Math.min(data.length - nitems, start + nitems);
+        break;
+      case "last":
+        nstart = data.length - nitems;
+    }
     setStart(nstart);
-  };
-
-  const handleNext = () => {
-    const nstart = Math.min(data.length - nitems, start + nitems);
-    setStart(nstart);
+    tableRef.current?.scrollIntoView({ behavior: "smooth" });
   };
 
   return (
     data.length > 0 && (
-      <div className="border-1 w-full rounded border-gray-700 shadow-md">
+      <div
+        ref={tableRef}
+        className="border-1 w-full rounded border-gray-700 shadow-md"
+      >
+        <TableNav
+          start={start}
+          nitems={nitems}
+          total={data.length}
+          handleNav={handleNav}
+        />
         <table className="h-full w-full table-auto">
           <thead className="h-10 bg-gray-50 text-left text-xs">
             <tr>
@@ -59,124 +90,15 @@ const Table = ({ file }: { file: File | null }) => {
             ))}
           </tbody>
         </table>
-        <div className="flex w-full flex-row justify-between p-4">
-          <div className="my-auto text-xs">
-            <span>
-              Showing {start} - {start + nitems} of {data.length}
-            </span>
-          </div>
-          <div className="inline-flex h-8 -space-x-px text-sm">
-            <span
-              onClick={() => setStart(1)}
-              className="ml-0 flex h-8 items-center justify-center rounded-l-lg border border-gray-300 bg-white px-3 leading-tight text-gray-500 hover:cursor-pointer hover:bg-gray-100 hover:text-gray-700 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white"
-            >
-              {/* First */}
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                fill="none"
-                viewBox="0 0 24 24"
-                strokeWidth={1.5}
-                stroke="currentColor"
-                className="h-4 w-4"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  d="M18.75 19.5l-7.5-7.5 7.5-7.5m-6 15L5.25 12l7.5-7.5"
-                />
-              </svg>
-            </span>
-            <span
-              onClick={() => handlePrev()}
-              className="ml-0 flex h-8 items-center justify-center border border-gray-300 bg-white px-3 leading-tight text-gray-500 hover:cursor-pointer hover:bg-gray-100 hover:text-gray-700 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white"
-            >
-              {/* Previous */}
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                fill="none"
-                viewBox="0 0 24 24"
-                strokeWidth={1.5}
-                stroke="currentColor"
-                className="h-4 w-4"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  d="M15.75 19.5L8.25 12l7.5-7.5"
-                />
-              </svg>
-            </span>
-            <span
-              onClick={() => handleNext()}
-              className="flex h-8 items-center justify-center border border-gray-300 bg-white px-3 leading-tight text-gray-500 hover:cursor-pointer hover:bg-gray-100 hover:text-gray-700 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white"
-            >
-              {/* Next */}
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                fill="none"
-                viewBox="0 0 24 24"
-                strokeWidth={1.5}
-                stroke="currentColor"
-                className="h-4 w-4"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  d="M8.25 4.5l7.5 7.5-7.5 7.5"
-                />
-              </svg>
-            </span>
-            <span
-              onClick={() => setStart(data.length - nitems)}
-              className="flex h-8 items-center justify-center rounded-r-lg border border-gray-300 bg-white px-3 leading-tight text-gray-500 hover:cursor-pointer hover:bg-gray-100 hover:text-gray-700 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white"
-            >
-              {/* last */}
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                fill="none"
-                viewBox="0 0 24 24"
-                strokeWidth={1.5}
-                stroke="currentColor"
-                className="h-4 w-4"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  d="M11.25 4.5l7.5 7.5-7.5 7.5m-6-15l7.5 7.5-7.5 7.5"
-                />
-              </svg>
-            </span>
-          </div>
-        </div>
+        <TableNav
+          start={start}
+          nitems={nitems}
+          total={data.length}
+          handleNav={handleNav}
+        />
       </div>
     )
   );
 };
 
 export default Table;
-
-// <li>
-//   <a
-//     href="#"
-//     className="flex h-8 items-center justify-center border border-gray-300 bg-white px-3 leading-tight text-gray-500 hover:bg-gray-100 hover:text-gray-700 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white"
-//   >
-//     1
-//   </a>
-// </li>
-// <li>
-//   <a
-//     href="#"
-//     className="flex h-8 items-center justify-center border border-gray-300 bg-white px-3 leading-tight text-gray-500 hover:bg-gray-100 hover:text-gray-700 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white"
-//   >
-//     2
-//   </a>
-// </li>
-// <li>
-//   <a
-//     href="#"
-//     aria-current="page"
-//     className="flex h-8 items-center justify-center border border-gray-300 bg-blue-50 px-3 text-blue-600 hover:bg-blue-100 hover:text-blue-700 dark:border-gray-700 dark:bg-gray-700 dark:text-white"
-//   >
-//     3
-//   </a>
-// </li>
