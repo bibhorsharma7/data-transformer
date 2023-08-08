@@ -1,13 +1,15 @@
 import Image from "next/image";
 import { Dispatch, SetStateAction } from "react";
 
-const Dropzone = ({
-  file,
-  setFile,
-}: {
+interface dropzoneProps {
   file: File | null;
   setFile: Dispatch<SetStateAction<File | null>>;
-}) => {
+}
+
+const Dropzone = (props: dropzoneProps) => {
+  const file = props.file;
+  const setFile = props.setFile;
+
   const handleDragOver = (e: React.DragEvent) => {
     e.preventDefault();
   };

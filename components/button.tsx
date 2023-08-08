@@ -1,6 +1,11 @@
 import { useState } from "react";
 
-const Button = ({ file }: { file: File | null }) => {
+interface buttonProps {
+  file: File | null;
+}
+
+const Button = (props: buttonProps) => {
+  const file = props.file;
   const [data, setData] = useState<JSON | null>(null);
 
   const handleSubmit = async () => {
