@@ -33,7 +33,7 @@ const Dropzone = (props: dropzoneProps) => {
     >
       <label
         htmlFor="file-input"
-        className="space-between flex h-full w-full flex-col items-center justify-center hover:cursor-pointer"
+        className="space-between flex h-full w-full flex-col items-center justify-center"
       >
         <svg
           xmlns="http://www.w3.org/2000/svg"
