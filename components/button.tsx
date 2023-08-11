@@ -1,34 +1,11 @@
-import { useState } from "react";
-
 interface buttonProps {
-  file: File | null;
+  text: string;
+  handleSubmit: () => void;
 }
 
 const Button = (props: buttonProps) => {
-  const file = props.file;
-  const [data, setData] = useState<JSON | null>(null);
-
-  const handleSubmit = async () => {
-    const formData = new FormData();
-    if (!file) {
-      return;
-    }
-
-    console.log("file name:", file.name);
-
-    formData.append("file", file);
-    console.log("formData:", formData);
-
-    // const response = await fetch("/api/uplaod", {
-    //   method: "POST",
-    //   body: formData,
-    // });
-
-    // const data = await response.json();
-    // setData(data.data);
-
-    alert("Submit Clicked");
-  };
+  const text = props.text;
+  const handleSubmit = props.handleSubmit;
 
   return (
     <div
@@ -37,7 +14,7 @@ const Button = (props: buttonProps) => {
     >
       <span className="absolute left-0 top-0 mr-0 flex h-full w-0 translate-y-0 transform rounded bg-green-500 opacity-90 transition-all duration-200 ease-out group-hover:w-full"></span>
       <span className="absolute left-0 top-0 flex h-full w-full flex-row items-center justify-center space-x-4 group-hover:text-black">
-        <p>Submit</p>
+        <p>{text}</p>
         <svg
           xmlns="http://www.w3.org/2000/svg"
           fill="none"
