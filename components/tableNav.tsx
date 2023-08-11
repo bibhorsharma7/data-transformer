@@ -1,24 +1,39 @@
-import { Dispatch, MutableRefObject, SetStateAction } from "react";
+import { ChangeEvent, Dispatch, SetStateAction } from "react";
+import Dropdown from "./dropdown";
 export type navArgument = "first" | "prev" | "next" | "last";
 
 interface tableNavProps {
   start: number;
   nitems: number;
   total: number;
-  handleNav: (type: navArgument) => void;
+  handleNav: (_: navArgument) => void;
+  setNitems: Dispatch<SetStateAction<number>>;
 }
 
 const TableNav = (props: tableNavProps) => {
   const start = props.start;
   const nitems = props.nitems;
   const total = props.total;
+  const setNitems = props.setNitems;
   const handleNav = props.handleNav;
+
+  const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
+    let n = parseInt(e.target.value);
+    if (n == null || n == undefined || Number.isNaN(n)) n = 0;
+    if (n >= 0 && n <= 100) setNitems(n);
+  };
 
   return (
     <div className="flex w-full flex-row justify-between p-4">
       <div className="my-auto text-xs">
         <span>
-          Showing {start} - {start + nitems} of {total}
+          Showing {start} - {start + nitems}{" "}
+          <Dropdown
+            items={[15, 50, 100]}
+            selected={nitems}
+            handleSelect={(n) => setNitems(n)}
+          />{" "}
+          of {total}
         </span>
       </div>
       <div className="inline-flex h-8 -space-x-px text-sm">
