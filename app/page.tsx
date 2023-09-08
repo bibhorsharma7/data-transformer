@@ -15,8 +15,10 @@ export default function Home() {
   const [showModal, setShowModal] = useState<boolean>(false);
 
   const handleSubmit = async () => {
-    setShowModal(true);
-    scrollTo(0, 0);
+    if (file != null) {
+      setShowModal(true);
+      scrollTo(0, 0);
+    }
   };
 
   return (
@@ -34,7 +36,11 @@ export default function Home() {
           colMapping={colMapping}
           setColMapping={setColMapping}
         />
-        <Button text="Submit" handleSubmit={handleSubmit} />
+        <Button
+          text="Submit"
+          handleSubmit={handleSubmit}
+          disabled={file == null ? true : false}
+        />
         {showModal && (
           <Modal
             data={data}

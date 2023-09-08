@@ -1,5 +1,6 @@
 interface buttonProps {
   text: string;
+  disabled: boolean;
   handleSubmit: () => void;
 }
 
@@ -10,10 +11,22 @@ const Button = (props: buttonProps) => {
   return (
     <div
       onClick={() => handleSubmit()}
-      className="oerflow-hidden group relative inline-block h-12 w-full space-x-4 rounded bg-green-400 py-2 text-gray-700 hover:cursor-pointer"
+      className={
+        (props.disabled
+          ? "bg-gray-500 text-gray-300 hover:cursor-not-allowed"
+          : "bg-green-400 text-gray-700 hover:cursor-pointer") +
+        " group relative inline-block h-12 w-full space-x-4 overflow-hidden rounded py-2"
+      }
     >
-      <span className="absolute left-0 top-0 mr-0 flex h-full w-0 translate-y-0 transform rounded bg-green-500 opacity-90 transition-all duration-200 ease-out group-hover:w-full"></span>
-      <span className="absolute left-0 top-0 flex h-full w-full flex-row items-center justify-center space-x-4 group-hover:text-black">
+      {!props.disabled && (
+        <span className="absolute left-0 top-0 mr-0 flex h-full w-0 translate-y-0 transform rounded bg-green-500 opacity-90 transition-all duration-200 ease-out group-hover:w-full"></span>
+      )}
+      <span
+        className={
+          (props.disabled ? "" : "group-hover:text-black ") +
+          "absolute left-0 top-0 flex h-full w-full flex-row items-center justify-center space-x-4"
+        }
+      >
         <p>{text}</p>
         <svg
           xmlns="http://www.w3.org/2000/svg"
