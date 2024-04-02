@@ -11,11 +11,7 @@ interface ModalProps {
 }
 
 const Modal = (props: ModalProps) => {
-  const data = props.data;
-  const columns = props.columns;
-  const mapping = props.mapping;
-  const selectedCols = props.selectedCols;
-  const setShow = props.setShow;
+  const { data, columns, mapping, selectedCols, setShow } = props;
 
   const [selCols, setSelcols] = useState<string[]>([]);
 
@@ -108,7 +104,7 @@ const Modal = (props: ModalProps) => {
               ),
           )}
         </div>
-        <Button text="Confirm" handleSubmit={handleSubmit} />
+        <Button disabled={false} text="Confirm" handleSubmit={handleSubmit} />
       </div>
     </div>
   );

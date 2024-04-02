@@ -7,8 +7,7 @@ interface dropzoneProps {
 }
 
 const Dropzone = (props: dropzoneProps) => {
-  const file = props.file;
-  const setFile = props.setFile;
+  const { file, setFile } = props;
 
   const handleDragOver = (e: React.DragEvent) => {
     e.preventDefault();

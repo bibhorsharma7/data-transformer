@@ -1,10 +1,10 @@
 "use client";
 
-import Button from "@/components/button";
-import Dropzone from "@/components/dropzone";
+import { useState } from "react";
 import Modal from "@/components/modal";
 import Table from "@/components/table";
-import { useState } from "react";
+import Button from "@/components/button";
+import Dropzone from "@/components/dropzone";
 
 export default function Home() {
   const [file, setFile] = useState<File | null>(null);
@@ -19,6 +19,26 @@ export default function Home() {
       setShowModal(true);
       scrollTo(0, 0);
     }
+  };
+
+  const calculateNPV = async () => {
+    const body = {
+      inflow: data.map((row) => row[0]),
+      outflow: data.map((row) => row[1]),
+      discount: data.map((row) => row[2]),
+    };
+
+    const rawResp = await fetch("http://localhost:3000/api/npv", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(body),
+    });
+
+    const response = await rawResp.json();
+    console.log("response: ", response);
+    alert("Net Present Value: " + response.net_present_value);
   };
 
   return (
@@ -39,6 +59,11 @@ export default function Home() {
         <Button
           text="Submit"
           handleSubmit={handleSubmit}
+          disabled={file == null ? true : false}
+        />
+        <Button
+          text="Calculate NPV"
+          handleSubmit={calculateNPV}
           disabled={file == null ? true : false}
         />
         {showModal && (

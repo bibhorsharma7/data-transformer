@@ -5,8 +5,7 @@ interface buttonProps {
 }
 
 const Button = (props: buttonProps) => {
-  const text = props.text;
-  const handleSubmit = props.handleSubmit;
+  const { text, handleSubmit } = props;
 
   return (
     <div

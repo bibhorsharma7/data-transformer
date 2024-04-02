@@ -7,9 +7,7 @@ interface dropdownProps {
 }
 
 const Dropdown = (props: dropdownProps) => {
-  const items = props.items;
-  const selected = props.selected;
-  const handleSelect = props.handleSelect;
+  const { items, selected, handleSelect } = props;
 
   const [show, setShow] = useState(false);
 

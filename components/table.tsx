@@ -19,24 +19,26 @@ interface tableProps {
 }
 
 const Table = (props: tableProps) => {
-  const file = props.file;
   const [loading, setLoading] = useState(false);
   const [nitems, setNitems] = useState(defaultNitems);
   const [start, setStart] = useState(0);
   const tableRef = useRef<HTMLDivElement | null>(null);
 
-  const data = props.data;
-  const setData = props.setData;
-  const cols = props.columns;
-  const setCols = props.setColumns;
-  const selected = props.selected;
-  const setSelected = props.setSelected;
-  const colMapping = props.colMapping;
-  const setColMapping = props.setColMapping;
+  const {
+    file,
+    data,
+    columns,
+    selected,
+    colMapping,
+    setData,
+    setColumns,
+    setSelected,
+    setColMapping,
+  } = props;
 
   useEffect(() => {
     setData([]);
-    setCols([]);
+    setColumns([]);
     setStart(0);
 
     if (!file) return;
@@ -49,9 +51,9 @@ const Table = (props: tableProps) => {
       // preview: 1000,
       chunk: (result: ParseResult<string[]>) => {
         // result.data = [{col: val, col: val, ...}, {}, {}]
-        if (cols.length == 0) {
-          const columns = Object.keys(result.data[0]);
-          setCols(columns);
+        if (columns.length == 0) {
+          const cols = Object.keys(result.data[0]);
+          setColumns(cols);
         }
         const tmp = result.data.map((obj) => {
           return Object.values(obj);
@@ -67,9 +69,9 @@ const Table = (props: tableProps) => {
   }, [file]);
 
   useEffect(() => {
-    const arr: boolean[] = new Array(cols.length).fill(false);
+    const arr: boolean[] = new Array(columns.length).fill(false);
     setSelected(arr);
-  }, [cols]);
+  }, [columns]);
 
   const handleNav = (type: navArgument) => {
     let nstart = 0;
@@ -113,7 +115,7 @@ const Table = (props: tableProps) => {
           <table className="h-full w-full table-auto">
             <thead className="h-10 bg-gray-50 text-left text-xs">
               <tr>
-                {cols.map((colName, idx) => (
+                {columns.map((colName, idx) => (
                   <th key={colName + idx} className="border border-black">
                     <input
                       className="w-full"
@@ -125,7 +127,7 @@ const Table = (props: tableProps) => {
                 ))}
               </tr>
               <tr className="h-8">
-                {cols.map((colName, idx) => (
+                {columns.map((colName, idx) => (
                   <th
                     className="px-4 hover:cursor-pointer"
                     key={colName}

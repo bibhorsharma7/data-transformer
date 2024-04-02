@@ -6,8 +6,7 @@ interface CheckboxProps {
 }
 
 const Checkbox = (props: CheckboxProps) => {
-  const selected = props.selected;
-  const value = props.value;
+  const { selected, value } = props;
 
   return (
     <div className="mr-2 inline-flex">
