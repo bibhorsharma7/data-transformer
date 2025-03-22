@@ -6,7 +6,7 @@ import Loading from "./loading";
 import Checkbox from "./checkbox";
 
 interface tableProps {
-  file: File | null;
+  file: File | undefined;
   data: string[][];
   columns: string[];
   selected: boolean[];
@@ -21,7 +21,7 @@ const Table = (props: tableProps) => {
   const [loading, setLoading] = useState(false);
   const [nitems, setNitems] = useState(defaultNitems);
   const [start, setStart] = useState(0);
-  const tableRef = useRef<HTMLDivElement | null>(null);
+  const tableRef = useRef<HTMLDivElement>();
 
   const {
     file,

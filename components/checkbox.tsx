@@ -1,5 +1,3 @@
-import { useEffect } from "react";
-
 interface CheckboxProps {
   selected: boolean;
   value: string;

@@ -1,9 +1,8 @@
-import Image from "next/image";
 import { Dispatch, SetStateAction } from "react";
 
 interface dropzoneProps {
-  file: File | null;
-  setFile: Dispatch<SetStateAction<File | null>>;
+  file: File | undefined;
+  setFile: Dispatch<SetStateAction<File | undefined>>;
 }
 
 const Dropzone = (props: dropzoneProps) => {
@@ -16,7 +15,7 @@ const Dropzone = (props: dropzoneProps) => {
   const handleDrop = (e: React.DragEvent) => {
     e.preventDefault();
 
-    let f = null;
+    let f = undefined;
     if (e.dataTransfer && e.dataTransfer.files[0]) {
       f = e.dataTransfer.files[0];
     }
@@ -71,7 +70,7 @@ const Dropzone = (props: dropzoneProps) => {
             <div
               onClick={(e) => {
                 e.preventDefault();
-                setFile(null);
+                setFile(undefined);
               }}
             >
               <svg
