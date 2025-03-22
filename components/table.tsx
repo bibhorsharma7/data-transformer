@@ -3,7 +3,6 @@ import Papa, { ParseResult } from "papaparse";
 import { Dispatch, SetStateAction, useEffect, useRef, useState } from "react";
 import TableNav, { navArgument } from "./tableNav";
 import Loading from "./loading";
-import { COMPILER_NAMES } from "next/dist/shared/lib/constants";
 import Checkbox from "./checkbox";
 
 interface tableProps {

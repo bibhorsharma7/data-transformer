@@ -1,4 +1,4 @@
-"use client";
+import 
 
 import { useState } from "react";
 import Modal from "@/components/modal";
@@ -6,7 +6,10 @@ import Table from "@/components/table";
 import Button from "@/components/button";
 import Dropzone from "@/components/dropzone";
 
-export default function Home() {
+export default function App() {
+
+
+
   const [file, setFile] = useState<File | null>(null);
   const [data, setData] = useState<string[][]>([]);
   const [selected, setSelected] = useState<boolean[]>([]);
@@ -44,6 +47,7 @@ export default function Home() {
   return (
     <main className="flex min-h-screen flex-col items-center justify-normal p-24">
       <div className="flex w-full flex-col items-center space-y-4">
+        <
         <Dropzone file={file} setFile={setFile} />
         <Table
           file={file}
