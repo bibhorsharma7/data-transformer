@@ -5,7 +5,7 @@ import { Inter } from "next/font/google";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "Data ETL App",
+  title: "Data Transformer App",
 };
 
 export default function RootLayout({
@@ -17,7 +17,7 @@ export default function RootLayout({
     <html lang="en">
       <body className={inter.className + " text-black"}>
         <div className="mt-10 flex flex-col items-center">
-          <h1 className="text-xl font-bold">Data ETL App</h1>
+          <h1 className="text-xl font-bold">Data Transformer</h1>
         </div>
         {children}
       </body>
